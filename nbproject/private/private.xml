@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group>
+            <file>file:/home/jp/NetBeansProjects/PatronesDiseño/src/patronesdisenio/FlyweightUsuario.java</file>
+            <file>file:/home/jp/NetBeansProjects/PatronesDiseño/src/patronesdisenio/ProxySingleton.java</file>
+            <file>file:/home/jp/NetBeansProjects/PatronesDiseño/src/patronesdisenio/Reserva.java</file>
+            <file>file:/home/jp/NetBeansProjects/PatronesDiseño/src/patronesdisenio/AdministradorAdapter.java</file>
+            <file>file:/home/jp/NetBeansProjects/PatronesDiseño/src/patronesdisenio/Facade.java</file>
+            <file>file:/home/jp/NetBeansProjects/PatronesDiseño/src/patronesdisenio/Main.java</file>
+            <file>file:/home/jp/NetBeansProjects/PatronesDiseño/src/patronesdisenio/Usuario.java</file>
+            <file>file:/home/jp/NetBeansProjects/PatronesDiseño/src/patronesdisenio/Conductor.java</file>
+            <file>file:/home/jp/NetBeansProjects/PatronesDiseño/src/patronesdisenio/Componente.java</file>
+            <file>file:/home/jp/NetBeansProjects/PatronesDiseño/src/patronesdisenio/Pasajero.java</file>
+            <file>file:/home/jp/NetBeansProjects/PatronesDiseño/src/patronesdisenio/Ruta.java</file>
+            <file>file:/home/jp/NetBeansProjects/PatronesDiseño/src/patronesdisenio/FlyweightFactory.java</file>
+            <file>file:/home/jp/NetBeansProjects/PatronesDiseño/src/patronesdisenio/Calle.java</file>
+            <file>file:/home/jp/NetBeansProjects/PatronesDiseño/src/patronesdisenio/ProxyInterface.java</file>
+            <file>file:/home/jp/NetBeansProjects/PatronesDiseño/src/patronesdisenio/Administrador.java</file>
+        </group>
+    </open-files>
+</project-private>
