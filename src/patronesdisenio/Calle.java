@@ -1,6 +1,6 @@
 package patronesdisenio;
 
-public class Calle implements Componente {
+public class Calle implements ComponenteComposite {
 
   private String nombre;
   private double coordenadaXOrigen;

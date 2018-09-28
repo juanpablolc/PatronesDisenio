@@ -2,11 +2,11 @@ package patronesdisenio;
 
 import java.util.ArrayList;
 
-public class Ruta implements Componente {
+public class Ruta implements ComponenteComposite {
 
   private String nombre;
   private FlyweightUsuario conductor;
-  private ArrayList<Componente> componentes;
+  private ArrayList<ComponenteComposite> componentes;
 
   public Ruta() {
     this.setNombre("");
@@ -24,14 +24,14 @@ public class Ruta implements Componente {
   public String obtenerInformacion() {
     String informacion = "RUTA: " + this.nombre + "\nCALLES: \n";
 
-    for (Componente componente : componentes) {
+    for (ComponenteComposite componente : componentes) {
       informacion += componente.obtenerInformacion();
     }
 
     return informacion;
   }
 
-  public void add(Componente componente) {
+  public void add(ComponenteComposite componente) {
     this.componentes.add(componente);
   }
 
@@ -51,11 +51,11 @@ public class Ruta implements Componente {
     this.conductor = conductor;
   }
 
-  public ArrayList<Componente> getComponentes() {
+  public ArrayList<ComponenteComposite> getComponentes() {
     return componentes;
   }
 
-  public void setComponentes(ArrayList<Componente> componentes) {
+  public void setComponentes(ArrayList<ComponenteComposite> componentes) {
     this.componentes = componentes;
   }
 }

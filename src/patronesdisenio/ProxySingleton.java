@@ -3,16 +3,19 @@ package patronesdisenio;
 public class ProxySingleton implements ProxyInterface {
 
   private static ProxySingleton unicaInstancia;
-  private Facade facade;
+  private static Facade facade;
 
   private ProxySingleton() {
     ProxySingleton.unicaInstancia = null;
-    this.facade = new Facade();
+    ProxySingleton.facade = null;
   }
 
   public static ProxySingleton reemplazarConstructor() {
     if (ProxySingleton.unicaInstancia == null) {
       ProxySingleton.unicaInstancia = new ProxySingleton();
+    }
+    if (ProxySingleton.facade == null) {
+      ProxySingleton.facade = new Facade();
     }
     return ProxySingleton.unicaInstancia;
   }

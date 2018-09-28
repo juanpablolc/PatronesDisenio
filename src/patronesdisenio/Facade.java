@@ -7,6 +7,7 @@ public class Facade {
   FlyweightFactory usuarios = new FlyweightFactory();
   ArrayList<Ruta> rutas = new ArrayList<>();
   ArrayList<Reserva> reservas = new ArrayList<>();
+  ArrayList<ComponenteDecorator> pagos = new ArrayList<>();
   int maxUsuario;
 
   public Facade() {
@@ -215,6 +216,45 @@ public class Facade {
     return this.reservas.size() > 0;
   }
 
+  // Pagos
+  public String registrarPagoTarjeta(
+          String valor,
+          String idConductor,
+          String idPasajero,
+          String numTarjeta,
+          String CCV,
+          String fechaCaducidad
+  ) {
+    String informacion = "";
+    informacion += "valor," + valor + ",";
+    informacion += "idConductor," + idConductor + ",";
+    informacion += "idPasajero," + idPasajero + ",";
+    informacion += "numTarjeta," + numTarjeta + ",";
+    informacion += "CCV," + CCV + ",";
+    informacion += "fechaCaducidad," + fechaCaducidad;
+    ComponenteDecorator pago = new PagoPSETarjeta(new Pago());
+    pago.setInformacion(informacion);
+    this.pagos.add(pago);
+    return "El pago ha sido registrado exitósamente.";
+  }
+
+  public String registrarPagoCuentaBancaria(
+          String valor,
+          String idConductor,
+          String idPasajero,
+          String numCuenta
+  ) {
+    String informacion = "";
+    informacion += "valor," + valor + ",";
+    informacion += "idConductor," + idConductor + ",";
+    informacion += "idPasajero," + idPasajero + ",";
+    informacion += "numCuenta," + numCuenta;
+    ComponenteDecorator pago = new PagoPSECuentaBancaria(new Pago());
+    pago.setInformacion(informacion);
+    this.pagos.add(pago);
+    return "El pago ha sido registrado exitósamente.";
+  }
+
   // Administrador
   public boolean existenUsuarios() {
     return this.maxUsuario > 0;
@@ -241,6 +281,23 @@ public class Facade {
     }
 
     return rutas;
+  }
+  
+  public boolean existenPagos() {
+    return this.pagos.size() > 0;
+  }
+  
+  public String listarPagos() {
+    String pagos = "PAGOS REGISTRADOS:\n\n";
+    for (ComponenteDecorator pago: this.pagos) {
+      if (pago instanceof PagoPSETarjeta) {
+        pagos += "Pago tarjeta: ";
+      } else if (pago instanceof PagoPSECuentaBancaria) {
+        pagos += "Pago cuenta bancaria: ";
+      }
+      pagos += pago.getInformacion() + "\n\n";
+    }
+    return pagos;
   }
 
   // Getters

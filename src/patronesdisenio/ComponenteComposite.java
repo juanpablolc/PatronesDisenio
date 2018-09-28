@@ -1,6 +1,6 @@
 package patronesdisenio;
 
-public interface Componente {
+public interface ComponenteComposite {
 
   public String obtenerInformacion();
 }

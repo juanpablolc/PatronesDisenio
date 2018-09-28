@@ -76,6 +76,13 @@ public class Main {
           int numRuta;
           int puestosReservados;
           String nombreRuta;
+          String valor,
+           idConductor,
+           idPasajero,
+           numTarjeta,
+           CCV,
+           fechaCaducidad,
+           numCuenta;
 
           int idUsuario = proxySingleton.login(correo, contrasenia);
 
@@ -168,7 +175,9 @@ public class Main {
                         + "1. Registrar reserva\n"
                         + "2. Listar reservas\n"
                         + "3. Modificar reserva\n"
-                        + "4. Eliminar reserva\n\n"
+                        + "4. Eliminar reserva\n"
+                        + "5. Realizar un pago PSE con tarjeta\n"
+                        + "6. Realizar un pago PSE con cuenta bancaria\n\n"
                         + "0. Cerrar sesión"
                 ));
                 switch (opcion3) {
@@ -193,6 +202,24 @@ public class Main {
                     mensaje = proxySingleton.getFacade().eliminarReserva(idRuta);
                     JOptionPane.showMessageDialog(null, mensaje);
                     break;
+                  case 5:
+                    valor = JOptionPane.showInputDialog("Ingrese el valor del pago: ");
+                    idConductor = JOptionPane.showInputDialog("Ingrese el id del conductor: ") + ",";
+                    idPasajero = JOptionPane.showInputDialog("Ingrese el id del pasajero: ") + ",";
+                    numTarjeta = JOptionPane.showInputDialog("Ingrese el número de la tarjeta: ") + ",";
+                    CCV = JOptionPane.showInputDialog("Ingrese el CCV: ") + ",";
+                    fechaCaducidad = JOptionPane.showInputDialog("Ingrese la fecha de caducidad: ");
+                    mensaje = proxySingleton.getFacade().registrarPagoTarjeta(valor, idConductor, idPasajero, numTarjeta, CCV, fechaCaducidad);
+                    JOptionPane.showMessageDialog(null, mensaje);
+                    break;
+                  case 6:
+                    valor = JOptionPane.showInputDialog("Ingrese el valor del pago: ");
+                    idConductor = JOptionPane.showInputDialog("Ingrese el id del conductor: ") + ",";
+                    idPasajero = JOptionPane.showInputDialog("Ingrese el id del pasajero: ") + ",";
+                    numCuenta = JOptionPane.showInputDialog("Ingrese el número de la cuenta: ");
+                    mensaje = proxySingleton.getFacade().registrarPagoCuentaBancaria(valor, idConductor, idPasajero, numCuenta);
+                    JOptionPane.showMessageDialog(null, mensaje);
+                    break;
                 }
               }
               break;
@@ -203,7 +230,8 @@ public class Main {
                         + "Seleccione una opción: \n\n"
                         + "1. Listar usuarios\n"
                         + "2. Listar rutas\n"
-                        + "3. Listar reservas\n\n"
+                        + "3. Listar reservas\n"
+                        + "4. Listar pagos\n\n"
                         + "0. Cerrar sesión"
                 ));
 
@@ -229,6 +257,8 @@ public class Main {
                       JOptionPane.showMessageDialog(null, "No hay ninguna reserva registrada.");
                     }
                     break;
+                  case 4:
+                    JOptionPane.showMessageDialog(null, proxySingleton.getFacade().listarPagos());
                 }
               }
               break;
