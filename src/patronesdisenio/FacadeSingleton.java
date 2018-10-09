@@ -2,25 +2,28 @@ package patronesdisenio;
 
 import java.util.ArrayList;
 
-public class Facade {
+public class FacadeSingleton {
 
-  FlyweightFactory usuarios = new FlyweightFactory();
+  private static FacadeSingleton unicaInstancia;
+
+  FlyweightFactory usuarioFactory = new FlyweightFactory();
   ArrayList<Ruta> rutas = new ArrayList<>();
   ArrayList<Reserva> reservas = new ArrayList<>();
   ArrayList<ComponenteDecorator> pagos = new ArrayList<>();
-  int maxUsuario;
 
-  public Facade() {
-    this.maxUsuario = 0;
+  public static FacadeSingleton reemplazarConstructor() {
+    if (unicaInstancia == null) {
+      unicaInstancia = new FacadeSingleton();
+    }
+    return unicaInstancia;
   }
 
   // Usuarios
   public String adicionarConductor(String correo, String nombre, String contrasenia) {
-    if (!this.existeUsuario(correo, "conductor")) {
+    if (this.usuarioFactory.getUsuario(correo) == null) {
       FlyweightUsuario conductor = new Conductor();
       conductor.adicionar(correo, nombre, contrasenia);
-      this.usuarios.addUsuario(maxUsuario, conductor);
-      this.maxUsuario++;
+      this.usuarioFactory.addUsuario(correo, conductor);
       return nombre + " ha sido registrado exitósamente como conductor.";
     } else {
       return "El correo " + correo + " ya está registrado como conductor.";
@@ -28,11 +31,10 @@ public class Facade {
   }
 
   public String adicionarPasajero(String correo, String nombre, String contrasenia) {
-    if (!this.existeUsuario(correo, "pasajero")) {
+    if (this.usuarioFactory.getUsuario(correo) == null) {
       FlyweightUsuario pasajero = new Pasajero();
       pasajero.adicionar(correo, nombre, contrasenia);
-      this.usuarios.addUsuario(maxUsuario, pasajero);
-      this.maxUsuario++;
+      this.usuarioFactory.addUsuario(correo, pasajero);
       return nombre + " ha sido registrado exitósamente como pasajero.";
     } else {
       return "El correo " + correo + " ya está registrado como pasajero.";
@@ -40,48 +42,34 @@ public class Facade {
   }
 
   public String adicionarAdministrador(String correo, String nombre, String contrasenia) {
-    if (!this.existeUsuario(correo, "administrador")) {
+    if (this.usuarioFactory.getUsuario(correo) == null) {
       FlyweightUsuario administrador = new AdministradorAdapter();
       administrador.adicionar(correo, nombre, contrasenia);
-      this.usuarios.addUsuario(maxUsuario, administrador);
-      this.maxUsuario++;
+      this.usuarioFactory.addUsuario(correo, administrador);
       return nombre + " ha sido registrado exitósamente como administrador.";
     } else {
       return "El correo " + correo + " ya está registrado como administrador.";
     }
   }
 
-  public String getNombreUsuario(int id) {
-    return this.usuarios.getUsuario(id).getNombre();
+  public String getNombreUsuario(String correo) {
+    return this.usuarioFactory.getUsuario(correo).getNombre();
   }
 
-  public String getTipoUsuario(int id) {
-    if (this.usuarios.getUsuario(id) instanceof Conductor) {
+  public String getTipoUsuario(String correo) {
+    if (this.usuarioFactory.getUsuario(correo) instanceof Conductor) {
       return "conductor";
-    } else if (this.usuarios.getUsuario(id) instanceof Pasajero) {
+    } else if (this.usuarioFactory.getUsuario(correo) instanceof Pasajero) {
       return "pasajero";
-    } else if (this.usuarios.getUsuario(id) instanceof AdministradorAdapter) {
+    } else if (this.usuarioFactory.getUsuario(correo) instanceof AdministradorAdapter) {
       return "administrador";
     }
     return null;
   }
 
-  private boolean existeUsuario(String correo, String tipoUsuario) {
-    for (int key : this.usuarios.getUsuarios().keySet()) {
-      if (this.usuarios.getUsuario(key).getCorreo().equals(correo)) {
-        if ((tipoUsuario.equals("conductor") && this.usuarios.getUsuario(key) instanceof Conductor)
-                || (tipoUsuario.equals("pasajero") && this.usuarios.getUsuario(key) instanceof Pasajero)
-                || (tipoUsuario.equals("administrador") && this.usuarios.getUsuario(key) instanceof AdministradorAdapter)) {
-          return true;
-        }
-      }
-    }
-    return false;
-  }
-
   // Rutas
-  public String registarRuta(String nombre, int idUsuario) {
-    Ruta ruta = new Ruta(nombre, this.usuarios.getUsuario(idUsuario));
+  public String registrarRuta(String nombre, String correo) {
+    Ruta ruta = new Ruta(nombre, this.usuarioFactory.getUsuario(correo));
     this.rutas.add(ruta);
     return "La ruta ha sido registrada exitósamente.";
   }
@@ -112,20 +100,20 @@ public class Facade {
     return "Calle " + nombre + " añadida exitósamente.";
   }
 
-  public boolean existenRutasConductor(int idConductor) {
+  public boolean existenRutasConductor(String correo) {
     for (Ruta ruta : this.rutas) {
-      if (ruta.getConductor().getCorreo().equals(this.usuarios.getUsuario(idConductor).getCorreo())) {
+      if (ruta.getConductor().getCorreo().equals(this.usuarioFactory.getUsuario(correo).getCorreo())) {
         return true;
       }
     }
     return false;
   }
 
-  public String listarRutasConductor(int idConductor) {
-    String rutas = "Rutas conductor " + this.usuarios.getUsuario(idConductor).getNombre() + "\n\n";
+  public String listarRutasConductor(String correo) {
+    String rutas = "Rutas conductor " + this.usuarioFactory.getUsuario(correo).getNombre() + "\n\n";
     int contadorRutas = 1;
     for (Ruta ruta : this.rutas) {
-      if (ruta.getConductor().getCorreo().equals(this.usuarios.getUsuario(idConductor).getCorreo())) {
+      if (ruta.getConductor().getCorreo().equals(this.usuarioFactory.getUsuario(correo).getCorreo())) {
         rutas += "[" + contadorRutas + "] " + ruta.obtenerInformacion() + "\n";
         contadorRutas++;
       }
@@ -133,10 +121,10 @@ public class Facade {
     return rutas;
   }
 
-  public String actualizarRuta(int idConductor, int numRuta, String nombre) {
+  public String actualizarRuta(String correo, int numRuta, String nombre) {
     int contadorRutasConductor = 1;
     for (int i = 0; i < this.rutas.size(); i++) {
-      if (this.rutas.get(i).getConductor().getCorreo().equals(this.usuarios.getUsuario(idConductor).getCorreo())) {
+      if (this.rutas.get(i).getConductor().getCorreo().equals(this.usuarioFactory.getUsuario(correo).getCorreo())) {
         if (contadorRutasConductor == numRuta) {
           this.rutas.get(i).setNombre(nombre);
           return "La ruta ha sido modificada exitósamente.";
@@ -147,10 +135,10 @@ public class Facade {
     return "Número de ruta no válido.";
   }
 
-  public String eliminarRuta(int idConductor, int numRuta) {
+  public String eliminarRuta(String correo, int numRuta) {
     int contadorRutasConductor = 1;
     for (int i = 0; i < this.rutas.size(); i++) {
-      if (this.rutas.get(i).getConductor().getCorreo().equals(this.usuarios.getUsuario(idConductor).getCorreo())) {
+      if (this.rutas.get(i).getConductor().getCorreo().equals(this.usuarioFactory.getUsuario(correo).getCorreo())) {
         if (contadorRutasConductor == numRuta) {
           this.rutas.remove(i);
           return "La ruta ha sido eliminada exitósamente.";
@@ -166,10 +154,10 @@ public class Facade {
   }
 
   // Reservas
-  public String registrarReserva(int idRuta, int idPasajero, int puestosReservados) {
+  public String registrarReserva(int idRuta, String correoPasajero, int puestosReservados) {
     idRuta--;
     if (rutas.get(idRuta) != null) {
-      Reserva reserva = new Reserva(idRuta, idPasajero, puestosReservados);
+      Reserva reserva = new Reserva(idRuta, correoPasajero, puestosReservados);
       this.reservas.add(reserva);
       return "La reserva ha sido registrada exitósamente.";
     } else {
@@ -183,7 +171,7 @@ public class Facade {
 
       for (int i = 0; i < this.reservas.size(); i++) {
         reservas += "[" + (i + 1) + "] Ruta: " + this.rutas.get(this.reservas.get(i).getIdRuta()).getNombre() + " - ";
-        reservas += "Pasajero: " + this.usuarios.getUsuario(this.reservas.get(i).getIdPasajero()).getNombre();
+        reservas += "Pasajero: " + this.usuarioFactory.getUsuario(this.reservas.get(i).getCorreoPasajero()).getNombre();
       }
 
       return reservas;
@@ -257,17 +245,17 @@ public class Facade {
 
   // Administrador
   public boolean existenUsuarios() {
-    return this.maxUsuario > 0;
+    return !this.usuarioFactory.getUsuarios().isEmpty();
   }
 
   public String listarUsuarios() {
     String usuarios = "USUARIOS REGISTRADOS: \n\n";
 
-    for (int i = 0; i < this.maxUsuario; i++) {
-      usuarios += "(" + this.getTipoUsuario(i) + ")"
-              + " Correo: " + this.usuarios.getUsuario(i).getCorreo()
-              + " - Nombre: " + this.usuarios.getUsuario(i).getNombre()
-              + " - Contraseña: " + this.usuarios.getUsuario(i).getContrasenia() + "\n";
+    for (FlyweightUsuario flyweightUsuario : this.usuarioFactory.getUsuarios().values()) {
+      usuarios += "(" + this.getTipoUsuario(flyweightUsuario.getCorreo()) + ")"
+              + " Correo: " + this.usuarioFactory.getUsuario(flyweightUsuario.getCorreo()).getCorreo()
+              + " - Nombre: " + this.usuarioFactory.getUsuario(flyweightUsuario.getCorreo()).getNombre()
+              + " - Contraseña: " + this.usuarioFactory.getUsuario(flyweightUsuario.getCorreo()).getContrasenia() + "\n";
     }
 
     return usuarios;
@@ -282,14 +270,14 @@ public class Facade {
 
     return rutas;
   }
-  
+
   public boolean existenPagos() {
     return this.pagos.size() > 0;
   }
-  
+
   public String listarPagos() {
     String pagos = "PAGOS REGISTRADOS:\n\n";
-    for (ComponenteDecorator pago: this.pagos) {
+    for (ComponenteDecorator pago : this.pagos) {
       if (pago instanceof PagoPSETarjeta) {
         pagos += "Pago tarjeta: ";
       } else if (pago instanceof PagoPSECuentaBancaria) {
@@ -301,8 +289,8 @@ public class Facade {
   }
 
   // Getters
-  public FlyweightFactory getUsuarios() {
-    return this.usuarios;
+  public FlyweightFactory getUsuarioFactory() {
+    return this.usuarioFactory;
   }
 
   public ArrayList<Ruta> getRutas() {

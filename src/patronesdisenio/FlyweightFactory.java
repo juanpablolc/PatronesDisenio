@@ -4,17 +4,17 @@ import java.util.HashMap;
 
 public class FlyweightFactory {
 
-  private HashMap<Integer, FlyweightUsuario> usuarios = new HashMap<>();
+  private HashMap<String, FlyweightUsuario> usuarios = new HashMap<>();
 
-  public HashMap<Integer, FlyweightUsuario> getUsuarios() {
+  public HashMap<String, FlyweightUsuario> getUsuarios() {
     return this.usuarios;
   }
 
-  public FlyweightUsuario getUsuario(int index) {
-    return (FlyweightUsuario) usuarios.get(index);
+  public FlyweightUsuario getUsuario(String correo) {
+    return (FlyweightUsuario) usuarios.get(correo);
   }
 
-  public void addUsuario(int index, FlyweightUsuario flyweightUsuario) {
-    this.usuarios.put(index, flyweightUsuario);
+  public void addUsuario(String correo, FlyweightUsuario flyweightUsuario) {
+    this.usuarios.put(correo, flyweightUsuario);
   }
 }

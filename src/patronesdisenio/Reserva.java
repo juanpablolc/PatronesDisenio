@@ -3,12 +3,12 @@ package patronesdisenio;
 public class Reserva {
 
   private int idRuta;
-  private int idPasajero;
+  private String correoPasajero;
   private int puestosReservados;
 
-  public Reserva(int idRuta, int idPasajero, int puestosReservados) {
+  public Reserva(int idRuta, String idPasajero, int puestosReservados) {
     this.idRuta = idRuta;
-    this.idPasajero = idPasajero;
+    this.correoPasajero = idPasajero;
     this.puestosReservados = puestosReservados;
   }
 
@@ -20,12 +20,12 @@ public class Reserva {
     this.idRuta = idRuta;
   }
 
-  public int getIdPasajero() {
-    return idPasajero;
+  public String getCorreoPasajero() {
+    return correoPasajero;
   }
 
-  public void setIdPasajero(int idPasajero) {
-    this.idPasajero = idPasajero;
+  public void setCorreoPasajero(String correoPasajero) {
+    this.correoPasajero = correoPasajero;
   }
 
   public int getPuestosReservados() {
